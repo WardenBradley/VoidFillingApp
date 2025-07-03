@@ -1,21 +1,24 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-transparent">
     <div class="container">
-      <a class="navbar-brand" href="#">Void Filling App</a>
+      <a class="navbar-brand" routerLink="/" routerLinkActive="active">Void Filling App</a>
 
-        <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="accountService.currentUser$ | async">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Potential Mates</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Lists</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link">Inbox</a>
-          </li>
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <ng-container *ngIf="accountService.currentUser$ | async">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/members" routerLinkActive="active">Potential Mates</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/lists" routerLinkActive="active">Lists</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/messages" routerLinkActive="active">Inbox</a>
+            </li>
+          </ng-container>
+          
         </ul>
 
-        <div class="dropdown" *ngIf="accountService.currentUser$ | async" dropdown>
-            <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Ready to Fill Your Void?</a>
+        <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
+            <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Gonna Fill Your Void, {{user.username | titlecase}}?</a>
             <div class="dropdown-menu mt-3" *dropdownMenu>
                 <a class="dropdown-item">Edit Profile</a>
                 <a class="dropdown-item" (click)="logout()">Logout</a>
@@ -26,7 +29,7 @@
           <input class="form-control me-2" type="text" placeholder="Username" name="username" [(ngModel)]="model.username">
          <input class="form-control me-2" type="password" placeholder="Password" name="password" [(ngModel)]="model.password">
 
-          <button class="btn btn-outline-success" type="submit">Login</button>
+          <button class="btn btn-success" type="submit">Login</button>
         </form>
       
     </div>

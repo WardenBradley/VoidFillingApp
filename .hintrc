@@ -9,6 +9,13 @@
       {
         "select-name": "off"
       }
+    ],
+    "axe/structure": [
+      "default",
+      {
+        "list": "off",
+        "listitem": "off"
+      }
     ]
   }
 }
