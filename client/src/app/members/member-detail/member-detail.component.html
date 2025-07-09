@@ -12,16 +12,16 @@
           <p>{{ member.city }}, {{ member.country }}</p>
         </div>
         <div>
-          <strong>Age:</strong>  
+          <strong>Age:</strong>
           <p>{{ member.age }}</p>
         </div>
         <div>
           <strong>Last Active:</strong>
-          <p>{{ member.lastActive }}</p>
+          <p>{{ member.lastActive + 'Z' | timeago }}</p>
         </div>
         <div>
           <strong>Member since:</strong>
-          <p>{{ member.created }}</p>
+          <p>{{ member.created | date: 'dd MMM yyyy' }}</p>
         </div>
       </div>
 
@@ -36,18 +36,22 @@
 
   <div class="col-8">
     <tabset class="member-tabset">
-      <tab heading="About {{member.knownAs}}">
+      <tab heading="About {{ member.knownAs }}">
         <h4>Description</h4>
-        <p>{{member.introduction}}</p>
+        <p>{{ member.introduction }}</p>
         <h4>Looking for</h4>
-        <p>{{member.lookingFor}}</p>
+        <p>{{ member.lookingFor }}</p>
       </tab>
       <tab heading="Interests">
         <h4>Interests</h4>
-        <p>{{member.interests}}</p>
+        <p>{{ member.interests }}</p>
       </tab>
       <tab heading="Photos">
-        <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
+        <ngx-gallery
+          [options]="galleryOptions"
+          [images]="galleryImages"
+          class="ngx-gallery"
+        ></ngx-gallery>
       </tab>
       <tab heading="Messages">
         <p>Messages go here</p>
