@@ -1,0 +1,18 @@
+<table class="table" style="background-color: transparent;">
+  <thead style="background-color: transparent;">
+    <tr style="background-color: transparent;">
+      <th style="background-color: transparent;">Username</th>
+      <th style="background-color: transparent;">Active roles</th>
+      <th style="background-color: transparent;">Actions</th>
+    </tr>
+  </thead>
+  <tbody style="background-color: transparent;">
+    <tr *ngFor="let user of users" style="background-color: transparent;">
+      <td style="background-color: transparent;">{{ user.username }}</td>
+      <td style="background-color: transparent;">{{ user.roles }}</td>
+      <td style="background-color: transparent;">
+        <button (click)="openRolesModal(user)" class="btn btn-info">Edit Roles</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

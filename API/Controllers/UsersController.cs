@@ -27,14 +27,23 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
+        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
             var currentUser = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             userParams.CurrentUsername = currentUser.UserName;
 
-            if (string.IsNullOrEmpty(userParams.Gender)){
-                userParams.Gender = currentUser.Gender == "male" ? "female" : currentUser.Gender == "female" ?
-                                    "male" : "other";
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                if (currentUser.UserName.ToLower() == "admin")
+                {
+                    userParams.Gender = null;
+                }
+                else
+                {
+                    userParams.Gender = currentUser.Gender == "male" ? "female" :
+                                        currentUser.Gender == "female" ? "male" :
+                                        "other";
+                }
             }
 
             var users = await _userRepository.GetMembersAsync(userParams);
@@ -97,37 +106,40 @@ namespace API.Controllers
         }
 
         [HttpPut("set-main-photo/{photoId}")]
-        public async Task<ActionResult> SetMainPhoto(int photoId){
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
 
-            if(user == null) return NotFound();
+            if (user == null) return NotFound();
 
             var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
-            if(photo == null) return NotFound();
+            if (photo == null) return NotFound();
 
-            if(photo.IsMain) return BadRequest("this is already your main photo");
+            if (photo.IsMain) return BadRequest("this is already your main photo");
 
             var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
-            if(currentMain != null) currentMain.IsMain = false;
+            if (currentMain != null) currentMain.IsMain = false;
             photo.IsMain = true;
 
-            if(await _userRepository.SaveAllAsync()) return NoContent();
+            if (await _userRepository.SaveAllAsync()) return NoContent();
 
             return BadRequest("Problems setting PfP");
         }
 
         [HttpDelete("delete-photo/{photoId}")]
-        public async Task<ActionResult> DeletePhoto(int photoId){
+        public async Task<ActionResult> DeletePhoto(int photoId)
+        {
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
 
             var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
-            if(photo == null) return NotFound();
+            if (photo == null) return NotFound();
 
-            if(photo.IsMain) return BadRequest("Don't delete Yourself!");
+            if (photo.IsMain) return BadRequest("Don't delete Yourself!");
 
-            if (photo.PublicId != null){
+            if (photo.PublicId != null)
+            {
                 var result = await _photoService.DeletePhotoAsync(photo.PublicId);
                 if (result.Error != null) return BadRequest(result.Error.Message);
             }
